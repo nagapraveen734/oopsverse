@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oopsverse - Fail Forward, Grow Together</title>
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            /* Dark theme colors */
+            --bg-primary: #000000;
+            --bg-secondary: #16181c;
+            --bg-tertiary: #1e2328;
+            --text-primary: #ffffff;
+            --text-secondary: #8b98a5;
+            --text-muted: #6e767d;
+            --border-color: #2f3336;
+            --hover-bg: #1d1f23;
+            --accent-blue: #1d9bf0;
+            --accent-blue-hover: #1a8cd8;
+            --accent-green: #00ba7c;
+            --accent-red: #f4212e;
+            --accent-purple: #7856ff;
+        }
+
+        /* Light theme colors */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f9fa;
+            --bg-tertiary: #f1f3f4;
+            --text-primary: #0f1419;
+            --text-secondary: #536471;
+            --text-muted: #657786;
+            --border-color: #eff3f4;
+            --hover-bg: #f7f9fa;
+        }
+
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 275px;
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            z-index: 100;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .logo p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .nav-menu {
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            font-size: 20px;
+            font-weight: 400;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .nav-item.active {
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            margin-right: 20px;
+            font-size: 24px;
+        }
+
+        .post-button {
+            width: 100%;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .post-button:hover {
+            background: var(--accent-blue-hover);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--hover-bg);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: 275px;
+            border-right: 1px solid var(--border-color);
+            min-height: 100vh;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Search Container */
+        .search-container {
+            margin: 16px 0;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.1);
+        }
+
+        .search-icon {
+            color: var(--text-muted);
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            width: 100%;
+            padding: 4px 0;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .clear-search {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .clear-search:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* ===== POSTS ===== */
+        .feed {
+            padding: 0;
+        }
+
+        .post {
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .post:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-author {
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .post-time {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .post-content {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+
+        .hashtag {
+            color: var(--accent-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hashtag:hover {
+            text-decoration: underline;
+        }
+
+        .failbot-tip {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-purple);
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .failbot-tip-header {
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: 4px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            max-width: 425px;
+            margin-top: 12px;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .action-button:hover {
+            background: rgba(29, 155, 240, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .action-button span {
+            margin-left: 8px;
+        }
+
+        /* ===== PROFILE ===== */
+        .profile-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            margin-right: 16px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 4px solid var(--bg-primary);
+        }
+
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            color: white;
+            border: 2px solid var(--bg-primary);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .avatar-upload-btn:hover {
+            background: var(--accent-blue-hover);
+            transform: scale(1.1);
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-name-container,
+        .profile-username-container,
+        .profile-bio-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .editable-username {
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .editable-username:hover {
+            background: var(--hover-bg);
+        }
+
+        .profile-username {
+            color: var(--text-muted);
+            font-size: 15px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-username:hover {
+            background: var(--hover-bg);
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 8px 0;
+            line-height: 1.4;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            min-height: 20px;
+        }
+
+        .profile-bio:hover {
+            background: var(--hover-bg);
+        }
+
+        .edit-name-btn,
+        .edit-username-btn,
+        .edit-bio-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .profile-name-container:hover .edit-name-btn,
+        .profile-username-container:hover .edit-username-btn,
+        .profile-bio-container:hover .edit-bio-btn {
+            opacity: 1;
+        }
+
+        .edit-name-btn:hover,
+        .edit-username-btn:hover,
+        .edit-bio-btn:hover {
+            background: var(--hover-bg);
+            color: var(--accent-blue);
+        }
+
+        .username-input,
+        .bio-input {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .bio-input {
+            width: 100%;
+            resize: vertical;
+            min-height: 60px;
+            line-height: 1.4;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .badge {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ===== RIGHT SIDEBAR ===== */
+        .right-sidebar {
+            width: 350px;
+            padding: 20px;
+            position: fixed;
+            right: 0;
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .widget {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .widget-header {
+            padding: 16px 20px;
+            font-size: 20px;
+            font-weight: 800;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .widget-content {
+            padding: 0;
+        }
+
+        .trending-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .trending-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-tag {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .trending-count {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 24px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: var(--hover-bg);
+        }
+
+        .compose-area {
+            padding: 20px;
+        }
+
+        .compose-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .compose-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .compose-input {
+            flex: 1;
+        }
+
+        .compose-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-family: inherit;
+            resize: none;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+
+        .compose-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .compose-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .compose-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .compose-button {
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .compose-button:hover {
+            background: rgba(29, 155, 240, 0.1);
+        }
+
+        .char-counter {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-right: 16px;
+        }
+
+        .char-counter.warning {
+            color: #ffad1f;
+        }
+
+        .char-counter.danger {
+            color: var(--accent-red);
+        }
+
+        .submit-button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: var(--accent-blue-hover);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== EMOJI PICKER ===== */
+        .emoji-picker {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: none;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .emoji-picker.active {
+            display: block;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+        }
+
+        .emoji-option {
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .emoji-option:hover {
+            background: var(--hover-bg);
+        }
+
+        /* ===== NOTIFICATIONS ===== */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: var(--accent-green);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 300px;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--accent-red);
+        }
+
+        .notification.warning {
+            background: #ffad1f;
+        }
+
+        .notification.info {
+            background: var(--accent-blue);
+        }
+
+        .notification-icon {
+            font-size: 16px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            margin-left: auto;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        /* Search Results Highlighting */
+        .search-highlight {
+            background: rgba(29, 155, 240, 0.2);
+            border-radius: 2px;
+            padding: 1px 2px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .no-results-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .no-results-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* ===== MOBILE STYLES ===== */
+        @media (max-width: 1024px) {
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 68px;
+                padding: 20px 8px;
+            }
+
+            .nav-text {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 12px;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+            }
+
+            .logo h1 {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .logo p {
+                display: none;
+            }
+
+            .post-button {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+            }
+
+            .desktop-text {
+                display: none;
+            }
+
+            .mobile-text {
+                display: inline;
+            }
+
+            .theme-toggle {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                padding: 0;
+                justify-content: center;
+            }
+
+            .theme-toggle span:last-child {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 68px;
+            }
+
+            .modal {
+                width: 95%;
+                margin: 20px;
+            }
+        }
+
+        /* FAB for mobile */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            z-index: 100;
+            display: none;
+        }
+
+        .fab:hover {
+            background: var(--accent-blue-hover);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .fab {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Text Display */
+        .mobile-text {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-text {
+                display: inline;
+            }
+            
+            .desktop-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="app-container">
+        <!-- Left Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Oopsverse</h1>
+                <p>Fail Forward, Grow Together</p>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item active" data-view="feed">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Home</span>
+                </div>
+                
+                <div class="nav-item" data-view="profile">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Profile</span>
+                </div>
+                
+                <div class="nav-item">
+                    <span class="nav-icon">🔍</span>
+                    <span class="nav-text">Explore</span>
+                </div>
+                
+                <div class="nav-item">
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-text">Notifications</span>
+                </div>
+                
+                <button class="post-button" id="postButton">
+                    <span class="desktop-text">Post Failure</span>
+                    <span class="mobile-text">+</span>
+                </button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Feed View -->
+            <div id="feedView" class="view active">
+                <div class="main-header">
+                    <h1 class="header-title">Home</h1>
+                    <p class="header-subtitle">See what failures are happening</p>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="search-box">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input type="text" id="searchInput" placeholder="Search failures or hashtags..." class="search-input">
+                            <button class="clear-search" id="clearSearch" style="display: none;">×</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feed" id="feed">
+                    <!-- Posts will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profileView" class="view profile-view">
+                <div class="main-header">
+                    <h1 class="header-title">Profile</h1>
+                    <p class="header-subtitle">Your failure journey</p>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar" id="profileAvatar">👤</div>
+                            <button class="avatar-upload-btn" id="avatarUploadBtn">📷</button>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-details">
+                            <div class="profile-name-container">
+                                <h2 class="editable-username" id="profileName">Anonymous Failer</h2>
+                                <button class="edit-name-btn" id="editNameBtn">✏️</button>
+                            </div>
+                            <div class="profile-username-container">
+                                <p class="profile-username editable-username" id="profileUsername">@anonymous_failer</p>
+                                <button class="edit-username-btn" id="editUsernameBtn">✏️</button>
+                            </div>
+                            <div class="profile-bio-container">
+                                <p class="profile-bio editable-bio" id="profileBio">Learning from failures, one mistake at a time 🚀</p>
+                                <button class="edit-bio-btn" id="editBioBtn">✏️</button>
+                            </div>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <div class="stat-number" id="totalFails">0</div>
+                                    <div class="stat-label">Fails</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-number" id="currentStreak">0</div>
+                                    <div class="stat-label">Day Streak</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-number" id="totalLessons">0</div>
+                                    <div class="stat-label">Lessons</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="badges" id="profileBadges">
+                        <!-- Badges will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="feed" id="profileFeed">
+                    <!-- User's posts will be populated by JavaScript -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    🔥 Trending Fails
+                </div>
+                <div class="widget-content" id="trendingWidget">
+                    <!-- Trending hashtags will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="widget">
+                <div class="widget-header">
+                    💡 FailBot Tips
+                </div>
+                <div class="widget-content">
+                    <div class="trending-item">
+                        <div class="trending-tag">Validate before building</div>
+                        <div class="trending-count">Talk to customers first</div>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-tag">Embrace the pivot</div>
+                        <div class="trending-count">Flexibility is key</div>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-tag">Learn from feedback</div>
+                        <div class="trending-count">Every failure teaches</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Floating Action Button (Mobile) -->
+    <button class="fab" id="fabButton">+</button>
+
+    <!-- Post Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Share Your Failure</h2>
+                <button class="close-button" id="closeModal">×</button>
+            </div>
+            
+            <div class="compose-area">
+                <div class="compose-header">
+                    <div class="compose-avatar" id="composeAvatar">👤</div>
+                    <div class="compose-input">
+                        <textarea 
+                            class="compose-textarea" 
+                            id="composeText" 
+                            placeholder="What failure taught you something today?"
+                            maxlength="280"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="compose-footer">
+                <div class="compose-actions">
+                    <div style="position: relative;">
+                        <button class="compose-button" id="emojiButton">😀</button>
+                        <div class="emoji-picker" id="emojiPicker">
+                            <div class="emoji-grid">
+                                <span class="emoji-option" data-emoji="😅">😅</span>
+                                <span class="emoji-option" data-emoji="🤦‍♂️">🤦‍♂️</span>
+                                <span class="emoji-option" data-emoji="🤦‍♀️">🤦‍♀️</span>
+                                <span class="emoji-option" data-emoji="😬">😬</span>
+                                <span class="emoji-option" data-emoji="🙈">🙈</span>
+                                <span class="emoji-option" data-emoji="💸">💸</span>
+                                <span class="emoji-option" data-emoji="📉">📉</span>
+                                <span class="emoji-option" data-emoji="🔥">🔥</span>
+                                <span class="emoji-option" data-emoji="💡">💡</span>
+                                <span class="emoji-option" data-emoji="🚀">🚀</span>
+                                <span class="emoji-option" data-emoji="💪">💪</span>
+                                <span class="emoji-option" data-emoji="🎯">🎯</span>
+                                <span class="emoji-option" data-emoji="⚡">⚡</span>
+                                <span class="emoji-option" data-emoji="🌟">🌟</span>
+                                <span class="emoji-option" data-emoji="🎉">🎉</span>
+                                <span class="emoji-option" data-emoji="👍">👍</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="compose-button" id="hashtagButton">#</button>
+                </div>
+                
+                <div style="display: flex; align-items: center;">
+                    <span class="char-counter" id="charCounter">0/280</span>
+                    <button class="submit-button" id="submitPost" disabled>Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // ===== OOPSVERSE APPLICATION =====
+        // Twitter-inspired social platform for sharing failures
+        // Built by Naga Praveen
+
+        class OopsverseApp {
+            constructor() {
+                this.currentView = 'feed';
+                this.currentTheme = localStorage.getItem('oopsverse_theme') || 'dark';
+                this.posts = JSON.parse(localStorage.getItem('oopsverse_posts')) || [];
+                this.userProfile = JSON.parse(localStorage.getItem('oopsverse_profile')) || {
+                    username: 'Anonymous Failer',
+                    handle: 'anonymous_failer',
+                    bio: 'Learning from failures, one mistake at a time 🚀',
+                    avatar: '👤',
+                    totalPosts: 0,
+                    badges: [],
+                    streak: 0,
+                    lastPostDate: null,
+                    joinDate: new Date().toISOString()
+                };
+                
+                this.init();
+            }
+
+            // ===== INITIALIZATION =====
+            init() {
+                this.setupEventListeners();
+                this.loadTheme();
+                this.loadUserProfile();
+                this.renderFeed();
+                this.updateTrendingHashtags();
+                this.checkBadges();
+                
+                // Add sample posts if none exist
+                if (this.posts.length === 0) {
+                    this.addSamplePosts();
+                }
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        this.switchView(e.currentTarget.dataset.view);
+                    });
+                });
+
+                // Post buttons
+                document.getElementById('postButton').addEventListener('click', () => this.openModal());
+                document.getElementById('fabButton').addEventListener('click', () => this.openModal());
+
+                // Modal
+                document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
+                document.getElementById('modalOverlay').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) this.closeModal();
+                });
+
+                // Theme toggle
+                document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+
+                // Compose form
+                document.getElementById('composeText').addEventListener('input', (e) => {
+                    this.updateCharCounter(e.target.value);
+                    this.validatePost();
+                });
+
+                document.getElementById('submitPost').addEventListener('click', () => this.createPost());
+
+                // Emoji picker
+                document.getElementById('emojiButton').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleEmojiPicker();
+                });
+
+                document.querySelectorAll('.emoji-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        this.insertEmoji(e.target.dataset.emoji);
+                    });
+                });
+
+                // Close emoji picker when clicking outside
+                document.addEventListener('click', () => {
+                    this.hideEmojiPicker();
+                });
+
+                // Hashtag button
+                document.getElementById('hashtagButton').addEventListener('click', () => {
+                    this.insertHashtag();
+                });
+
+                // Search functionality
+                const searchInput = document.getElementById('searchInput');
+                const clearSearch = document.getElementById('clearSearch');
+                
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.handleSearch(e.target.value);
+                    });
+                }
+                
+                if (clearSearch) {
+                    clearSearch.addEventListener('click', () => {
+                        this.clearSearch();
+                    });
+                }
+
+                // Profile editing
+                const editNameBtn = document.getElementById('editNameBtn');
+                const editUsernameBtn = document.getElementById('editUsernameBtn');
+                const editBioBtn = document.getElementById('editBioBtn');
+                const avatarUploadBtn = document.getElementById('avatarUploadBtn');
+                const avatarInput = document.getElementById('avatarInput');
+
+                if (editNameBtn) {
+                    editNameBtn.addEventListener('click', () => this.editProfileField('name'));
+                }
+                
+                if (editUsernameBtn) {
+                    editUsernameBtn.addEventListener('click', () => this.editProfileField('username'));
+                }
+                
+                if (editBioBtn) {
+                    editBioBtn.addEventListener('click', () => this.editProfileField('bio'));
+                }
+                
+                if (avatarUploadBtn) {
+                    avatarUploadBtn.addEventListener('click', () => avatarInput.click());
+                }
+                
+                if (avatarInput) {
+                    avatarInput.addEventListener('change', (e) => this.handleAvatarUpload(e));
+                }
+
+                // Direct click editing
+                document.getElementById('profileName').addEventListener('click', () => this.editProfileField('name'));
+                document.getElementById('profileUsername').addEventListener('click', () => this.editProfileField('username'));
+                document.getElementById('profileBio').addEventListener('click', () => this.editProfileField('bio'));
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                        this.hideEmojiPicker();
+                        this.clearSearch();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        if (document.getElementById('modalOverlay').classList.contains('active')) {
+                            this.createPost();
+                        }
+                    }
+                });
+            }
+
+            // ===== THEME MANAGEMENT =====
+            loadTheme() {
+                document.body.setAttribute('data-theme', this.currentTheme);
+                this.updateThemeButton();
+            }
+
+            toggleTheme() {
+                this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('oopsverse_theme', this.currentTheme);
+                this.loadTheme();
+                this.showNotification(`Switched to ${this.currentTheme} mode!`);
+            }
+
+            updateThemeButton() {
+                const icon = document.getElementById('themeIcon');
+                const text = document.getElementById('themeText');
+                
+                if (this.currentTheme === 'dark') {
+                    icon.textContent = '🌙';
+                    text.textContent = 'Dark';
+                } else {
+                    icon.textContent = '☀️';
+                    text.textContent = 'Light';
+                }
+            }
+
+            // ===== VIEW MANAGEMENT =====
+            switchView(view) {
+                // Update navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`[data-view="${view}"]`).classList.add('active');
+
+                // Update views
+                document.querySelectorAll('.view').forEach(v => {
+                    v.classList.remove('active');
+                });
+                document.getElementById(`${view}View`).classList.add('active');
+
+                this.currentView = view;
+
+                if (view === 'profile') {
+                    this.renderProfile();
+                }
+            }
+
+            // ===== MODAL MANAGEMENT =====
+            openModal() {
+                document.getElementById('modalOverlay').classList.add('active');
+                document.getElementById('composeText').focus();
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeModal() {
+                document.getElementById('modalOverlay').classList.remove('active');
+                document.getElementById('composeText').value = '';
+                this.updateCharCounter('');
+                this.validatePost();
+                this.hideEmojiPicker();
+                document.body.style.overflow = '';
+            }
+
+            // ===== USER PROFILE MANAGEMENT =====
+            loadUserProfile() {
+                document.getElementById('profileName').textContent = this.userProfile.username;
+                document.getElementById('profileUsername').textContent = `@${this.userProfile.handle}`;
+                document.getElementById('profileBio').textContent = this.userProfile.bio;
+                
+                // Handle avatar
+                if (this.userProfile.avatar.startsWith('data:')) {
+                    // Custom uploaded image
+                    document.getElementById('profileAvatar').style.backgroundImage = `url(${this.userProfile.avatar})`;
+                    document.getElementById('profileAvatar').style.backgroundSize = 'cover';
+                    document.getElementById('profileAvatar').style.backgroundPosition = 'center';
+                    document.getElementById('profileAvatar').textContent = '';
+                    
+                    document.getElementById('composeAvatar').style.backgroundImage = `url(${this.userProfile.avatar})`;
+                    document.getElementById('composeAvatar').style.backgroundSize = 'cover';
+                    document.getElementById('composeAvatar').style.backgroundPosition = 'center';
+                    document.getElementById('composeAvatar').textContent = '';
+                } else {
+                    // Emoji avatar
+                    document.getElementById('profileAvatar').textContent = this.userProfile.avatar;
+                    document.getElementById('composeAvatar').textContent = this.userProfile.avatar;
+                }
+                
+                document.getElementById('totalFails').textContent = this.userProfile.totalPosts;
+                document.getElementById('currentStreak').textContent = this.userProfile.streak;
+                document.getElementById('totalLessons').textContent = this.userProfile.badges.length;
+                
+                this.renderBadges();
+            }
+
+            saveUserProfile() {
+                localStorage.setItem('oopsverse_profile', JSON.stringify(this.userProfile));
+                this.loadUserProfile();
+            }
+
+            // ===== SEARCH FUNCTIONALITY =====
+            handleSearch(query) {
+                const searchInput = document.getElementById('searchInput');
+                const clearButton = document.getElementById('clearSearch');
+                
+                if (query.trim()) {
+                    clearButton.style.display = 'block';
+                    this.filterPosts(query);
+                } else {
+                    clearButton.style.display = 'none';
+                    this.renderFeed();
+                }
+            }
+
+            filterPosts(query) {
+                const feed = document.getElementById('feed');
+                const searchTerm = query.toLowerCase().trim();
+                
+                let filteredPosts = this.posts.filter(post => {
+                    const content = post.content.toLowerCase();
+                    const hashtags = post.hashtags.join(' ').toLowerCase();
+                    const author = post.author.toLowerCase();
+                    
+                    return content.includes(searchTerm) || 
+                           hashtags.includes(searchTerm) || 
+                           author.includes(searchTerm);
+                });
+
+                if (filteredPosts.length === 0) {
+                    feed.innerHTML = `
+                        <div class="no-results">
+                            <div class="no-results-icon">🔍</div>
+                            <div class="no-results-text">No failures found</div>
+                            <div class="no-results-subtitle">Try searching for different keywords or hashtags</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Highlight search terms
+                feed.innerHTML = filteredPosts.map(post => {
+                    const highlightedPost = { ...post };
+                    highlightedPost.content = this.highlightSearchTerm(post.content, searchTerm);
+                    return this.renderPost(highlightedPost);
+                }).join('');
+                
+                this.attachPostEventListeners();
+            }
+
+            highlightSearchTerm(text, term) {
+                if (!term) return text;
+                
+                const regex = new RegExp(`(${term})`, 'gi');
+                return text.replace(regex, '<span class="search-highlight">$1</span>');
+            }
+
+            clearSearch() {
+                const searchInput = document.getElementById('searchInput');
+                const clearButton = document.getElementById('clearSearch');
+                
+                searchInput.value = '';
+                clearButton.style.display = 'none';
+                this.renderFeed();
+            }
+
+            // ===== ENHANCED PROFILE EDITING =====
+            editProfileField(field) {
+                let element, currentValue, inputType = 'input';
+                
+                switch (field) {
+                    case 'name':
+                        element = document.getElementById('profileName');
+                        currentValue = this.userProfile.username;
+                        break;
+                    case 'username':
+                        element = document.getElementById('profileUsername');
+                        currentValue = this.userProfile.handle;
+                        break;
+                    case 'bio':
+                        element = document.getElementById('profileBio');
+                        currentValue = this.userProfile.bio;
+                        inputType = 'textarea';
+                        break;
+                }
+
+                if (!element) return;
+
+                const input = document.createElement(inputType);
+                input.value = currentValue;
+                input.className = inputType === 'textarea' ? 'bio-input' : 'username-input';
+                
+                if (inputType === 'input') {
+                    input.maxLength = field === 'name' ? 50 : 30;
+                } else {
+                    input.maxLength = 160;
+                    input.rows = 3;
+                }
+                
+                element.replaceWith(input);
+                input.focus();
+                input.select();
+                
+                const saveField = () => {
+                    const newValue = input.value.trim() || currentValue;
+                    
+                    // Update user profile
+                    switch (field) {
+                        case 'name':
+                            this.userProfile.username = newValue;
+                            break;
+                        case 'username':
+                            this.userProfile.handle = newValue;
+                            break;
+                        case 'bio':
+                            this.userProfile.bio = newValue;
+                            break;
+                    }
+                    
+                    this.saveUserProfile();
+                    
+                    // Restore element
+                    const newElement = document.createElement(field === 'bio' ? 'p' : (field === 'name' ? 'h2' : 'p'));
+                    newElement.className = field === 'bio' ? 'profile-bio editable-bio' : 'editable-username';
+                    newElement.id = element.id || (field === 'name' ? 'profileName' : (field === 'username' ? 'profileUsername' : 'profileBio'));
+                    
+                    if (field === 'username') {
+                        newElement.textContent = `@${newValue}`;
+                        newElement.className = 'profile-username editable-username';
+                    } else {
+                        newElement.textContent = newValue;
+                    }
+                    
+                    newElement.addEventListener('click', () => this.editProfileField(field));
+                    input.replaceWith(newElement);
+                    
+                    this.showNotification(`${field.charAt(0).toUpperCase() + field.slice(1)} updated!`);
+                };
+                
+                input.addEventListener('blur', saveField);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && inputType === 'input') {
+                        e.preventDefault();
+                        saveField();
+                    }
+                    if (e.key === 'Escape') {
+                        input.value = currentValue;
+                        saveField();
+                    }
+                });
+            }
+
+            handleAvatarUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    this.showNotification('Image too large. Please choose a file under 5MB.', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Create canvas to resize image
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Set canvas size (square, 200x200)
+                        canvas.width = 200;
+                        canvas.height = 200;
+                        
+                        // Draw and resize image
+                        ctx.drawImage(img, 0, 0, 200, 200);
+                        
+                        // Convert to data URL
+                        const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+                        
+                        // Update profile
+                        this.userProfile.avatar = dataURL;
+                        this.saveUserProfile();
+                        
+                        this.showNotification('Avatar updated successfully!');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // ===== POST MANAGEMENT =====
+            createPost() {
+                const content = document.getElementById('composeText').value.trim();
+                
+                if (!content || content.length > 280) {
+                    this.showNotification('Please enter a valid failure story (1-280 characters)', 'error');
+                    return;
+                }
+
+                const post = {
+                    id: Date.now(),
+                    content: content,
+                    author: this.userProfile.username,
+                    avatar: this.userProfile.avatar,
+                    timestamp: new Date().toISOString(),
+                    hashtags: this.extractHashtags(content),
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    isUserPost: true
+                };
+
+                // Add FailBot tip
+                post.failbotTip = this.generateFailBotTip(content);
+
+                this.posts.unshift(post);
+                this.savePosts();
+
+                // Update user profile
+                this.userProfile.totalPosts++;
+                this.updateStreak();
+                this.saveUserProfile();
+
+                // Close modal and refresh views
+                this.closeModal();
+                this.renderFeed();
+                this.updateTrendingHashtags();
+                this.checkBadges();
+
+                this.showNotification('Failure shared successfully! 🎉');
+            }
+
+            extractHashtags(text) {
+                const hashtagRegex = /#[\w]+/g;
+                return text.match(hashtagRegex) || [];
+            }
+
+            savePosts() {
+                localStorage.setItem('oopsverse_posts', JSON.stringify(this.posts));
+            }
+
+            renderFeed() {
+                const feed = document.getElementById('feed');
+                const otherPosts = this.posts.filter(post => !post.isUserPost);
+                
+                if (otherPosts.length === 0) {
+                    feed.innerHTML = `
+                        <div class="post">
+                            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                                <h3>Welcome to Oopsverse! 👋</h3>
+                                <p>This is where failure stories from the community appear.</p>
+                                <p>Share your first failure to get started!</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                feed.innerHTML = otherPosts.map(post => this.renderPost(post)).join('');
+                this.attachPostEventListeners();
+            }
+
+            renderProfile() {
+                const profileFeed = document.getElementById('profileFeed');
+                const userPosts = this.posts.filter(post => post.isUserPost);
+                
+                if (userPosts.length === 0) {
+                    profileFeed.innerHTML = `
+                        <div class="post">
+                            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                                <h3>No failures shared yet</h3>
+                                <p>Share your first failure to start your journey!</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                profileFeed.innerHTML = userPosts.map(post => this.renderPost(post)).join('');
+                this.attachPostEventListeners();
+            }
+
+            renderPost(post) {
+                const timeAgo = this.getTimeAgo(post.timestamp);
+                const processedContent = this.processHashtags(post.content);
+                
+                return `
+                    <div class="post" data-post-id="${post.id}">
+                        <div class="post-header">
+                            <div class="post-avatar">${post.avatar}</div>
+                            <div class="post-info">
+                                <span class="post-author">${post.author}</span>
+                                <span class="post-time">${timeAgo}</span>
+                            </div>
+                        </div>
+                        <div class="post-content">${processedContent}</div>
+                        ${post.failbotTip ? `
+                            <div class="failbot-tip">
+                                <div class="failbot-tip-header">💡 FailBot Tip</div>
+                                <div>${post.failbotTip}</div>
+                            </div>
+                        ` : ''}
+                        <div class="post-actions">
+                            <button class="action-button like-btn" data-action="like">
+                                💬 <span>${post.comments}</span>
+                            </button>
+                            <button class="action-button repost-btn" data-action="repost">
+                                🔄 <span>${post.shares}</span>
+                            </button>
+                            <button class="action-button like-btn" data-action="like">
+                                ❤️ <span>${post.likes}</span>
+                            </button>
+                            <button class="action-button share-btn" data-action="share">
+                                📤
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            processHashtags(content) {
+                return content.replace(/#(\w+)/g, '<a href="#" class="hashtag" data-hashtag="$1">#$1</a>');
+            }
+
+            getTimeAgo(timestamp) {
+                const now = new Date();
+                const postTime = new Date(timestamp);
+                const diffInSeconds = Math.floor((now - postTime) / 1000);
+
+                if (diffInSeconds < 60) return `${diffInSeconds}s`;
+                if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
+                if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
+                return `${Math.floor(diffInSeconds / 86400)}d`;
+            }
+
+            attachPostEventListeners() {
+                // Hashtag clicks
+                document.querySelectorAll('.hashtag').forEach(tag => {
+                    tag.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const hashtag = e.target.dataset.hashtag;
+                        document.getElementById('searchInput').value = `#${hashtag}`;
+                        this.handleSearch(`#${hashtag}`);
+                    });
+                });
+
+                // Action buttons
+                document.querySelectorAll('.action-button').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = e.currentTarget.dataset.action;
+                        const postId = e.currentTarget.closest('.post').dataset.postId;
+                        this.handlePostAction(action, postId);
+                    });
+                });
+            }
+
+            handlePostAction(action, postId) {
+                const post = this.posts.find(p => p.id == postId);
+                if (!post) return;
+
+                switch (action) {
+                    case 'like':
+                        post.likes++;
+                        this.showNotification('Liked! ❤️');
+                        break;
+                    case 'repost':
+                        post.shares++;
+                        this.showNotification('Shared! 🔄');
+                        break;
+                    case 'share':
+                        if (navigator.share) {
+                            navigator.share({
+                                title: 'Oopsverse Failure',
+                                text: post.content,
+                                url: window.location.href
+                            });
+                        } else {
+                            navigator.clipboard.writeText(post.content);
+                            this.showNotification('Copied to clipboard! 📋');
+                        }
+                        break;
+                }
+
+                this.savePosts();
+                if (this.currentView === 'feed') {
+                    this.renderFeed();
+                } else {
+                    this.renderProfile();
+                }
+            }
+
+            generateFailBotTip(content) {
+                const tips = {
+                    'no users': 'Tip: Focus on market validation before building',
+                    'no customers': 'Tip: Talk to potential customers early and often',
+                    'ran out of money': 'Tip: Plan your runway and seek funding earlier',
+                    'burnout': 'Tip: Work-life balance is crucial for long-term success',
+                    'co-founder': 'Tip: Clear communication and defined roles prevent conflicts',
+                    'marketing': 'Tip: Build your audience before you build your product',
+                    'launch': 'Tip: Soft launches help you iterate before going big',
+                    'feedback': 'Tip: Negative feedback is often more valuable than praise',
+                    'pivot': 'Tip: Pivoting is not failure, it\'s learning and adapting',
+                    'competition': 'Tip: Focus on your unique value proposition'
+                };
+
+                const lowerContent = content.toLowerCase();
+                for (const [keyword, tip] of Object.entries(tips)) {
+                    if (lowerContent.includes(keyword)) {
+                        return tip;
+                    }
+                }
+
+                return 'Tip: Every failure is a stepping stone to success!';
+            }
+
+            updateStreak() {
+                const today = new Date().toDateString();
+                const lastPostDate = this.userProfile.lastPostDate ? new Date(this.userProfile.lastPostDate).toDateString() : null;
+
+                if (lastPostDate === today) {
+                    // Already posted today, no change to streak
+                    return;
+                }
+
+                if (lastPostDate) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayString = yesterday.toDateString();
+
+                    if (lastPostDate === yesterdayString) {
+                        // Posted yesterday, continue streak
+                        this.userProfile.streak++;
+                    } else {
+                        // Streak broken, reset to 1
+                        this.userProfile.streak = 1;
+                    }
+                } else {
+                    // First post
+                    this.userProfile.streak = 1;
+                }
+
+                this.userProfile.lastPostDate = today;
+            }
+
+            checkBadges() {
+                const newBadges = [];
+
+                // First Fail badge
+                if (this.userProfile.totalPosts >= 1 && !this.userProfile.badges.includes('first-fail')) {
+                    newBadges.push('first-fail');
+                }
+
+                // 5 Posts badge
+                if (this.userProfile.totalPosts >= 5 && !this.userProfile.badges.includes('five-posts')) {
+                    newBadges.push('five-posts');
+                }
+
+                // 3-Day Streak badge
+                if (this.userProfile.streak >= 3 && !this.userProfile.badges.includes('three-day-streak')) {
+                    newBadges.push('three-day-streak');
+                }
+
+                // 10 Posts badge
+                if (this.userProfile.totalPosts >= 10 && !this.userProfile.badges.includes('ten-posts')) {
+                    newBadges.push('ten-posts');
+                }
+
+                // 7-Day Streak badge
+                if (this.userProfile.streak >= 7 && !this.userProfile.badges.includes('seven-day-streak')) {
+                    newBadges.push('seven-day-streak');
+                }
+
+                if (newBadges.length > 0) {
+                    this.userProfile.badges.push(...newBadges);
+                    this.saveUserProfile();
+                    this.showBadgeNotification(newBadges);
+                }
+            }
+
+            renderBadges() {
+                const badgeContainer = document.getElementById('profileBadges');
+                const badgeMap = {
+                    'first-fail': { emoji: '🔥', name: 'First Fail' },
+                    'five-posts': { emoji: '🎯', name: '5 Posts' },
+                    'ten-posts': { emoji: '💯', name: '10 Posts' },
+                    'three-day-streak': { emoji: '💥', name: '3-Day Streak' },
+                    'seven-day-streak': { emoji: '🚀', name: '7-Day Streak' }
+                };
+
+                if (this.userProfile.badges.length === 0) {
+                    badgeContainer.innerHTML = '<div class="badge">🌱 New Failer</div>';
+                    return;
+                }
+
+                badgeContainer.innerHTML = this.userProfile.badges.map(badgeId => {
+                    const badge = badgeMap[badgeId];
+                    return `<div class="badge">${badge.emoji} ${badge.name}</div>`;
+                }).join('');
+            }
+
+            showBadgeNotification(newBadges) {
+                const badgeMap = {
+                    'first-fail': { emoji: '🔥', name: 'First Fail' },
+                    'five-posts': { emoji: '🎯', name: '5 Posts' },
+                    'ten-posts': { emoji: '💯', name: '10 Posts' },
+                    'three-day-streak': { emoji: '💥', name: '3-Day Streak' },
+                    'seven-day-streak': { emoji: '🚀', name: '7-Day Streak' }
+                };
+
+                newBadges.forEach((badgeId, index) => {
+                    const badge = badgeMap[badgeId];
+                    setTimeout(() => {
+                        this.showNotification(`🎉 New Badge: ${badge.emoji} ${badge.name}!`);
+                    }, index * 1000);
+                });
+            }
+
+            // ===== COMPOSE HELPERS =====
+            updateCharCounter(text) {
+                const counter = document.getElementById('charCounter');
+                const length = text.length;
+                const maxLength = 280;
+                
+                counter.textContent = `${length}/${maxLength}`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.className = 'char-counter danger';
+                } else if (length > maxLength * 0.7) {
+                    counter.className = 'char-counter warning';
+                } else {
+                    counter.className = 'char-counter';
+                }
+            }
+
+            validatePost() {
+                const content = document.getElementById('composeText').value.trim();
+                const submitButton = document.getElementById('submitPost');
+                
+                if (content.length > 0 && content.length <= 280) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            }
+
+            toggleEmojiPicker() {
+                const picker = document.getElementById('emojiPicker');
+                picker.classList.toggle('active');
+            }
+
+            hideEmojiPicker() {
+                const picker = document.getElementById('emojiPicker');
+                picker.classList.remove('active');
+            }
+
+            insertEmoji(emoji) {
+                const textarea = document.getElementById('composeText');
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                
+                textarea.value = text.substring(0, start) + emoji + text.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+                
+                this.updateCharCounter(textarea.value);
+                this.validatePost();
+                this.hideEmojiPicker();
+                textarea.focus();
+            }
+
+            insertHashtag() {
+                const textarea = document.getElementById('composeText');
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                
+                textarea.value = text.substring(0, start) + '#' + text.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+                
+                this.updateCharCounter(textarea.value);
+                this.validatePost();
+                textarea.focus();
+            }
+
+            // ===== TRENDING HASHTAGS =====
+            updateTrendingHashtags() {
+                const hashtagCount = {};
+                
+                this.posts.forEach(post => {
+                    post.hashtags.forEach(hashtag => {
+                        const tag = hashtag.toLowerCase();
+                        hashtagCount[tag] = (hashtagCount[tag] || 0) + 1;
+                    });
+                });
+
+                const trending = Object.entries(hashtagCount)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5);
+
+                const trendingWidget = document.getElementById('trendingWidget');
+                
+                if (trending.length === 0) {
+                    trendingWidget.innerHTML = `
+                        <div class="trending-item">
+                            <div class="trending-tag">No trending hashtags yet</div>
+                            <div class="trending-count">Start using hashtags in your posts!</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                trendingWidget.innerHTML = trending.map(([hashtag, count]) => `
+                    <div class="trending-item" data-hashtag="${hashtag}">
+                        <div class="trending-tag">${hashtag}</div>
+                        <div class="trending-count">${count} post${count !== 1 ? 's' : ''}</div>
+                    </div>
+                `).join('');
+
+                // Add click listeners to trending hashtags
+                document.querySelectorAll('.trending-item[data-hashtag]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const hashtag = item.dataset.hashtag;
+                        document.getElementById('searchInput').value = hashtag;
+                        this.handleSearch(hashtag);
+                        this.switchView('feed');
+                    });
+                });
+            }
+
+            // ===== ENHANCED NOTIFICATION SYSTEM =====
+            showNotification(message, type = 'success') {
+                const container = document.getElementById('notificationContainer');
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                const iconMap = {
+                    success: '✅',
+                    error: '❌',
+                    warning: '⚠️',
+                    info: 'ℹ️'
+                };
+                
+                notification.innerHTML = `
+                    <span class="notification-icon">${iconMap[type] || iconMap.success}</span>
+                    <span class="notification-text">${message}</span>
+                    <button class="notification-close">×</button>
+                `;
+                
+                container.appendChild(notification);
+                
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                // Auto hide after 5 seconds
+                const autoHide = setTimeout(() => {
+                    this.hideNotification(notification);
+                }, 5000);
+                
+                // Manual close
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    clearTimeout(autoHide);
+                    this.hideNotification(notification);
+                });
+            }
+
+            hideNotification(notification) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+
+            // ===== SAMPLE DATA =====
+            addSamplePosts() {
+                const samplePosts = [
+                    {
+                        id: 1,
+                        content: "Spent 6 months building a feature nobody wanted. Learned to validate ideas with customers first! #startup #validation #lesson",
+                        author: "Sarah Chen",
+                        avatar: "👩‍💻",
+                        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                        hashtags: ["#startup", "#validation", "#lesson"],
+                        likes: 12,
+                        comments: 3,
+                        shares: 2,
+                        isUserPost: false,
+                        failbotTip: "Tip: Talk to potential customers early and often"
+                    },
+                    {
+                        id: 2,
+                        content: "Launched without any marketing strategy. Got 3 downloads in the first week 😅 Now I know 'build it and they will come' is a myth! #marketing #launch",
+                        author: "Alex Rodriguez",
+                        avatar: "👨‍🚀",
+                        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+                        hashtags: ["#marketing", "#launch"],
+                        likes: 8,
+                        comments: 5,
+                        shares: 1,
+                        isUserPost: false,
+                        failbotTip: "Tip: Build your audience before you build your product"
+                    },
+                    {
+                        id: 3,
+                        content: "Burned out after working 80-hour weeks for 3 months straight. Health > hustle culture. Taking breaks is not weakness! #burnout #health #balance",
+                        author: "Maya Patel",
+                        avatar: "👩‍⚕️",
+                        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+                        hashtags: ["#burnout", "#health", "#balance"],
+                        likes: 15,
+                        comments: 7,
+                        shares: 4,
+                        isUserPost: false,
+                        failbotTip: "Tip: Work-life balance is crucial for long-term success"
+                    }
+                ];
+
+                this.posts = samplePosts;
+                this.savePosts();
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new OopsverseApp();
+        });
+    </script>
+</body>
+</html>
+<!-- © 2025 Oopsverse - All rights reserved -->
+
+
